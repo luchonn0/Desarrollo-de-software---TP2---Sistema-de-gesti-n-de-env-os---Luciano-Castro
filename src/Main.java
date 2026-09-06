@@ -4,12 +4,12 @@ import java.util.List;
 public class Main {
 
     public static void main(String[] args) {
-   
+        // Crear un cliente
         Cliente cliente = new Cliente("35123456", "Luciano Castro", "luciano@email.com");
-
+        // Crear una sucursal
         Sucursal sucursalCentral = new Sucursal("S1", "Sucursal Central", "Viedma");
 
-   
+        // Crear paquetes
         Paquete p1 = new Paquete(
                 1,
                 "Notebook",
@@ -31,7 +31,7 @@ public class Main {
                 "Mendoza"
         );
 
-      
+        // Crear envíos
         Envio envio1 = new EnvioEstandar(100, 5000, cliente);
         envio1.agregarPaquete(p1);
 
@@ -54,12 +54,12 @@ public class Main {
             sucursalCentral.recibirEnvio(envio, "Recepción inicial en sistema");
             
             
-            
+            // Calcular y mostrar el costo del envío
             System.out.println(
                 "Costo calculado para Envío " + envio.codigo + ": $" +
                 envio.calcularCosto()
             );
-
+            
             sucursalCentral.despacharEnvio(envio, "Despacho hacia destino");
 
             envio.mostrarResumen();
@@ -67,7 +67,7 @@ public class Main {
 
             System.out.println("--------------------");
         }
-        
+        // Mostrar resumen general del cliente
         System.out.println("\nResumen general del cliente:");
         cliente.mostrarEnvios();
     }

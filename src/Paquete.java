@@ -6,7 +6,7 @@ public class Paquete {
     private String destino;
     private EstadoPaquete estado;
 
- 
+    // Constructor
     public Paquete(int id, String descripcion, double peso, String destino) {
         this.id = id;
         this.descripcion = descripcion;
@@ -15,7 +15,7 @@ public class Paquete {
         this.estado = EstadoPaquete.RECIBIDO;
     }
 
-
+    // Constructor con peso y destino
     public Paquete(int id, String descripcion) {
         this(id, descripcion, 0, "Sin destino");
     }
@@ -43,14 +43,14 @@ public class Paquete {
             estado = EstadoPaquete.DISTRIBUCION;
         }
     }
-
+    // Método para entregar el paquete
     public void entregar() {
         if (!puedeSerEntregado()) {
             throw new IllegalStateException("El paquete no puede ser entregado si no está en distribución.");
         }
         this.estado = EstadoPaquete.ENTREGADO;
     }
-
+    // Método privado para verificar si el paquete puede ser entregado
     private boolean puedeSerEntregado() {
         return this.estado == EstadoPaquete.DISTRIBUCION;
     }
