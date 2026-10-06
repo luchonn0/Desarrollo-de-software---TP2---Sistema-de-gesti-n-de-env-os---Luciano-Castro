@@ -6,7 +6,6 @@ public class Main {
     public static void main(String[] args) {
         // Crear un cliente
         Cliente cliente = new Cliente("35123456", "Luciano Castro", "luciano@email.com");
-        // Crear una sucursal
         Sucursal sucursalCentral = new Sucursal("S1", "Sucursal Central", "Viedma");
 
         // Crear paquetes
