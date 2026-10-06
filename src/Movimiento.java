@@ -1,22 +1,27 @@
 import java.time.LocalDateTime;
+import java.util.Optional;
 
 public class Movimiento {
     private LocalDateTime fechaHora;
-    private String descripcion;
+    private TipoMovimiento tipo;
     private Sucursal sucursal;
 
-    public Movimiento(String descripcion, Sucursal sucursal) {
+    public Movimiento(TipoMovimiento tipo, Sucursal sucursal) {
         this.fechaHora = LocalDateTime.now();
-        this.descripcion = descripcion;
-        this.sucursal = sucursal;
+        this.tipo = tipo;
+        this.sucursal = Optional.ofNullable(sucursal)
+                .orElse(new Sucursal("EXT", "Externa/Destino", "N/A"));
     }
 
     public void mostrarMovimiento() {
-        String nombreSucursal = (sucursal != null) ? sucursal.getNombre() : "Externa/Destino";
-        System.out.println("[" + fechaHora + "] " + descripcion + " - Sucursal: " + nombreSucursal);
+        System.out.println("[" + fechaHora + "] Evento: " + tipo + " - Sucursal: " + sucursal.getNombre());
     }
 
-    public String getDescripcion() {
-        return descripcion;
+    public TipoMovimiento getTipo() {
+        return tipo;
+    }
+
+    public Sucursal getSucursal() {
+        return sucursal;
     }
 }

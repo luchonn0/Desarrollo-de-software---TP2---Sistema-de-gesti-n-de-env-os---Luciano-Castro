@@ -6,7 +6,6 @@ public class Paquete {
     private String destino;
     private EstadoPaquete estado;
 
-    // Constructor
     public Paquete(int id, String descripcion, double peso, String destino) {
         this.id = id;
         this.descripcion = descripcion;
@@ -15,7 +14,6 @@ public class Paquete {
         this.estado = EstadoPaquete.RECIBIDO;
     }
 
-    // Constructor con peso y destino
     public Paquete(int id, String descripcion) {
         this(id, descripcion, 0, "Sin destino");
     }
@@ -28,37 +26,39 @@ public class Paquete {
         return peso;
     }
 
+    public String getDestino() {
+        return destino;
+    }
+
     public EstadoPaquete getEstado() {
         return estado;
     }
 
-    public void preparar() {
-        if (estado == EstadoPaquete.RECIBIDO) {
-            estado = EstadoPaquete.PREPARACION;
+    private void cambiarEstado(EstadoPaquete nuevoEstado) {
+        boolean transicionValida = this.estado.permiteTransicion(nuevoEstado);
+        if (!transicionValida) {
+            throw new IllegalStateException("Transición inválida: no se puede pasar de " + this.estado + " a " + nuevoEstado);
         }
+        this.estado = nuevoEstado;
+    }
+
+    public void preparar() {
+        cambiarEstado(EstadoPaquete.PREPARACION);
     }
 
     public void distribuir() {
-        if (estado == EstadoPaquete.PREPARACION) {
-            estado = EstadoPaquete.DISTRIBUCION;
-        }
+        cambiarEstado(EstadoPaquete.DISTRIBUCION);
     }
-    // Método para entregar el paquete
+
     public void entregar() {
-        if (!puedeSerEntregado()) {
-            throw new IllegalStateException("El paquete no puede ser entregado si no está en distribución.");
-        }
-        this.estado = EstadoPaquete.ENTREGADO;
-    }
-    // Método privado para verificar si el paquete puede ser entregado
-    private boolean puedeSerEntregado() {
-        return this.estado == EstadoPaquete.DISTRIBUCION;
+        cambiarEstado(EstadoPaquete.ENTREGADO);
     }
 
     public void mostrarInfo() {
         System.out.println(
             "Paquete " + id +
             " | " + descripcion +
+            " | Destino: " + destino +
             " | Estado: " + estado
         );
     }

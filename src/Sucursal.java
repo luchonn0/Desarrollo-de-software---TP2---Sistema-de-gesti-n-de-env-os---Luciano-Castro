@@ -9,18 +9,25 @@ public class Sucursal {
         this.ciudad = ciudad;
     }
 
-    public void recibirEnvio(Envio envio, String descripcionMovimiento) {
-        
-        envio.registrarMovimiento(descripcionMovimiento, this);
+    public void recibirEnvio(Envio envio) {
+        envio.registrarMovimiento(TipoMovimiento.RECIBIDO, this);
         System.out.println("Sucursal " + nombre + " recibió el envío.");
     }
 
-    public void despacharEnvio(Envio envio, String descripcionMovimiento) {
-        envio.registrarMovimiento(descripcionMovimiento, this);
+    public void despacharEnvio(Envio envio) {
+        envio.registrarMovimiento(TipoMovimiento.DESPACHADO, this);
         System.out.println("Sucursal " + nombre + " despachó el envío.");
+    }
+
+    public String getId() {
+        return id;
     }
 
     public String getNombre() {
         return nombre;
+    }
+
+    public String getCiudad() {
+        return ciudad;
     }
 }

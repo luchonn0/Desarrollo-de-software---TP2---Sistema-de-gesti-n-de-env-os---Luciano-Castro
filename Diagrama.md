@@ -3,12 +3,12 @@ classDiagram
         - String dni
         - String nombre
         - String email
-        - List~Envio~ envios
+        - Set~Envio~ envios
         + Cliente(String dni, String nombre, String email)
         + void agregarEnvio(Envio envio)
         + String getDni()
         + String getNombre()
-        + List~Envio~ getEnvios()
+        + Set~Envio~ getEnvios()
         + void mostrarEnvios()
     }
 
@@ -21,6 +21,8 @@ classDiagram
         + Envio(int codigo, double costoBase, Cliente cliente)
         + void agregarPaquete(Paquete paquete)
         + void registrarMovimiento(String desc, Sucursal sucursal)
+        + Movimiento obtenerUltimoMovimiento()
+        + List~Movimiento~ getHistorial()
         + void mostrarHistorial()
         + void mostrarResumen()
         + double calcularCosto()*
@@ -55,7 +57,7 @@ classDiagram
         + void preparar()
         + void distribuir()
         + void entregar()
-        - boolean puedeSerEntregado()
+        - void cambiarEstado(EstadoPaquete nuevoEstado)
         + void mostrarInfo()
     }
 
@@ -84,6 +86,7 @@ classDiagram
         PREPARACION
         DISTRIBUCION
         ENTREGADO
+        + permiteTransicion(EstadoPaquete siguiente)*
     }
 
     Cliente "1" --> "*" Envio : realiza
@@ -92,5 +95,5 @@ classDiagram
     Envio <|-- EnvioInternacional
     Envio "1" *-- "*" Paquete : contiene
     Envio "1" *-- "*" Movimiento : historial
-    Movimiento --> "0..1" Sucursal : ocurre en
+    Movimiento --> "1" Sucursal : ocurre en
     Paquete --> EstadoPaquete : tiene estado

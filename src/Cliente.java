@@ -1,23 +1,22 @@
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Optional;
+import java.util.Set;
 
 public class Cliente {
     private String dni;
     private String nombre;
     private String email;
-    private List<Envio> envios;
+    private Set<Envio> envios;
 
     public Cliente(String dni, String nombre, String email) {
         this.dni = dni;
         this.nombre = nombre;
         this.email = email;
-        this.envios = new ArrayList<>();
+        this.envios = new HashSet<>();
     }
 
     public void agregarEnvio(Envio envio) {
-        if (envio != null && !envios.contains(envio)) {
-            envios.add(envio);
-        }
+        Optional.ofNullable(envio).ifPresent(envios::add);
     }
 
     public String getDni() {
@@ -28,14 +27,16 @@ public class Cliente {
         return nombre;
     }
 
-    public List<Envio> getEnvios() {
+    public String getEmail() {
+        return email;
+    }
+
+    public Set<Envio> getEnvios() {
         return envios;
     }
 
     public void mostrarEnvios() {
-        System.out.println("Envíos del cliente " + nombre + ":");
-        for (Envio e : envios) {
-            e.mostrarResumen();
-        }
+        System.out.println("Envíos del cliente " + nombre + " (" + email + "):");
+        envios.forEach(Envio::mostrarResumen);
     }
 }
