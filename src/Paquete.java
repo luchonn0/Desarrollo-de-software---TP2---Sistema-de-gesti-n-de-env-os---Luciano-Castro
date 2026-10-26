@@ -1,9 +1,8 @@
 public class Paquete {
-
-    private int id;
-    private String descripcion;
-    private double peso;
-    private String destino;
+    private final int id;
+    private final String descripcion;
+    private final double peso;
+    private final String destino;
     private EstadoPaquete estado;
 
     public Paquete(int id, String descripcion, double peso, String destino) {
@@ -14,52 +13,24 @@ public class Paquete {
         this.estado = EstadoPaquete.RECIBIDO;
     }
 
-    public Paquete(int id, String descripcion) {
-        this(id, descripcion, 0, "Sin destino");
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public double getPeso() {
-        return peso;
-    }
-
-    public String getDestino() {
-        return destino;
-    }
-
-    public EstadoPaquete getEstado() {
-        return estado;
-    }
+    public int getId() { return id; }
+    public String getDescripcion() { return descripcion; }
+    public double getPeso() { return peso; }
+    public String getDestino() { return destino; }
+    public EstadoPaquete getEstado() { return estado; }
 
     private void cambiarEstado(EstadoPaquete nuevoEstado) {
-        boolean transicionValida = this.estado.permiteTransicion(nuevoEstado);
-        if (!transicionValida) {
+        if (!this.estado.permiteTransicion(nuevoEstado)) {
             throw new IllegalStateException("Transición inválida: no se puede pasar de " + this.estado + " a " + nuevoEstado);
         }
         this.estado = nuevoEstado;
     }
 
-    public void preparar() {
-        cambiarEstado(EstadoPaquete.PREPARACION);
-    }
+    public void preparar() { cambiarEstado(EstadoPaquete.PREPARACION); }
+    public void distribuir() { cambiarEstado(EstadoPaquete.DISTRIBUCION); }
+    public void entregar() { cambiarEstado(EstadoPaquete.ENTREGADO); }
 
-    public void distribuir() {
-        cambiarEstado(EstadoPaquete.DISTRIBUCION);
-    }
-
-    public void entregar() {
-        cambiarEstado(EstadoPaquete.ENTREGADO);
-    }
-
-    public void mostrarInfo() {
-        System.out.println(
-            "Paquete " + id +
-            " | " + descripcion +
-            " | Destino: " + destino +
-            " | Estado: " + estado
-        );
+    public String obtenerInfoTexto() {
+        return "Paquete " + id + " | " + descripcion + " | Destino: " + destino + " | Estado: " + estado;
     }
 }

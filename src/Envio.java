@@ -1,10 +1,8 @@
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 public abstract class Envio {
-
     protected int codigo;
     protected double costoBase;
     protected List<Paquete> paquetes;
@@ -18,54 +16,69 @@ public abstract class Envio {
         this.cliente = cliente;
         this.historial = new ArrayList<>();
         
-        Optional.ofNullable(cliente).ifPresent(c -> c.agregarEnvio(this));
+        if (cliente != null) {
+            cliente.agregarEnvio(this);
+        }
+    }
+
+    public int getCodigo() {
+        return codigo;
     }
 
     public void agregarPaquete(Paquete paquete) {
-        if (paquetes.size() >= 3) {
-            throw new IllegalArgumentException("Un envío no puede tener más de 3 paquetes[cite: 1].");
+        if (paquete == null) {
+            throw new IllegalArgumentException("El paquete no puede ser nulo.");
         }
-        Optional.ofNullable(paquete).ifPresent(paquetes::add);
+        if (!hayLugar()) {
+            throw new IllegalStateException("Un envío no puede tener más de 3 paquetes.");
+        }
+        paquetes.add(paquete);
+    }
+
+    private boolean hayLugar() {
+        return paquetes.size() < 3;
+    }
+
+    private boolean tienePaquetes() {
+        return !paquetes.isEmpty();
     }
 
     public void registrarMovimiento(TipoMovimiento tipo, Sucursal sucursal) {
+        if (!tienePaquetes()) {
+            throw new IllegalStateException("No se puede registrar un movimiento en un envío sin paquetes.");
+        }
+        
+        if (tipo == TipoMovimiento.ENTREGADO && !estaDespachado()) {
+            throw new IllegalStateException("Intentar entregar un paquete que todavía no fue despachado.");
+        }
+
         historial.add(new Movimiento(tipo, sucursal));
     }
 
-    // Método para filtrar movimientos por tipo sin usar cadenas de texto (ideal para decisiones de negocio)
-    public List<Movimiento> filtrarMovimientosPorTipo(TipoMovimiento tipo) {
+    private boolean estaDespachado() {
+        return historial.stream().anyMatch(m -> m.getTipo() == TipoMovimiento.DESPACHADO);
+    }
+
+    public List<Sucursal> obtenerSucursalesRecorridas() {
         return historial.stream()
-                .filter(m -> m.getTipo() == tipo)
+                .map(Movimiento::getSucursal)
+                .distinct()
                 .collect(Collectors.toList());
     }
 
     public Movimiento obtenerUltimoMovimiento() {
-        return historial.stream()
-                .reduce((primer, segundo) -> segundo)
-                .orElse(null);
+        if (historial.isEmpty()) {
+            throw new IllegalStateException("El envío no registra movimientos en su historial.");
+        }
+        return historial.get(historial.size() - 1);
     }
 
     public List<Movimiento> getHistorial() {
-        return historial;
+        return new ArrayList<>(historial);
     }
 
-    public void mostrarHistorial() {
-        System.out.println("Historial del Envío " + codigo + ":");
-        historial.forEach(Movimiento::mostrarMovimiento);
-    }
-
-    public void mostrarResumen() {
-        String nombreCliente = Optional.ofNullable(cliente)
-                .map(Cliente::getNombre)
-                .orElse("Sin cliente");
-
-        System.out.println(
-            "Código: " + codigo +
-            " | Cliente: " + nombreCliente +
-            " | Costo: $" + calcularCosto()
-        );
-
-        paquetes.forEach(Paquete::mostrarInfo);
+    public List<Paquete> getPaquetes() {
+        return new ArrayList<>(paquetes);
     }
 
     public abstract double calcularCosto();

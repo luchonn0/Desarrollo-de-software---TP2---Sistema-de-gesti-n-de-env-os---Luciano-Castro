@@ -1,12 +1,11 @@
 import java.util.HashSet;
-import java.util.Optional;
 import java.util.Set;
 
 public class Cliente {
-    private String dni;
-    private String nombre;
-    private String email;
-    private Set<Envio> envios;
+    private final String dni;
+    private final String nombre;
+    private final String email;
+    private final Set<Envio> envios;
 
     public Cliente(String dni, String nombre, String email) {
         this.dni = dni;
@@ -16,27 +15,23 @@ public class Cliente {
     }
 
     public void agregarEnvio(Envio envio) {
-        Optional.ofNullable(envio).ifPresent(envios::add);
+        if (envio != null) {
+            envios.add(envio);
+        }
     }
 
-    public String getDni() {
-        return dni;
-    }
-
-    public String getNombre() {
-        return nombre;
-    }
-
-    public String getEmail() {
-        return email;
-    }
+    public String getDni() { return dni; }
+    public String getNombre() { return nombre; }
+    public String getEmail() { return email; }
 
     public Set<Envio> getEnvios() {
-        return envios;
+        return new HashSet<>(envios);
     }
 
     public void mostrarEnvios() {
         System.out.println("Envíos del cliente " + nombre + " (" + email + "):");
-        envios.forEach(Envio::mostrarResumen);
+        for (Envio envio : envios) {
+            System.out.println(" - Código de envío: " + envio.getCodigo() + " | Costo: $" + envio.calcularCosto());
+        }
     }
 }

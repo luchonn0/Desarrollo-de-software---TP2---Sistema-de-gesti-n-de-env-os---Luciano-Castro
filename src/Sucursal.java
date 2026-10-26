@@ -1,7 +1,7 @@
 public class Sucursal {
-    private String id;
-    private String nombre;
-    private String ciudad;
+    private final String id;
+    private final String nombre;
+    private final String ciudad;
 
     public Sucursal(String id, String nombre, String ciudad) {
         this.id = id;
@@ -10,24 +10,20 @@ public class Sucursal {
     }
 
     public void recibirEnvio(Envio envio) {
+        if (envio == null) {
+            throw new IllegalArgumentException("No se puede recibir un envío inexistente.");
+        }
         envio.registrarMovimiento(TipoMovimiento.RECIBIDO, this);
-        System.out.println("Sucursal " + nombre + " recibió el envío.");
     }
 
     public void despacharEnvio(Envio envio) {
+        if (envio == null) {
+            throw new IllegalArgumentException("No se puede despachar un envío inexistente.");
+        }
         envio.registrarMovimiento(TipoMovimiento.DESPACHADO, this);
-        System.out.println("Sucursal " + nombre + " despachó el envío.");
     }
 
-    public String getId() {
-        return id;
-    }
-
-    public String getNombre() {
-        return nombre;
-    }
-
-    public String getCiudad() {
-        return ciudad;
-    }
+    public String getId() { return id; }
+    public String getNombre() { return nombre; }
+    public String getCiudad() { return ciudad; }
 }
